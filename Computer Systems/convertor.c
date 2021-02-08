@@ -2,7 +2,7 @@
 #include <stdlib.h> 
 
 double convert (double celsius) { //Convert Function that takes a celcius input and converts it to fahrenheit
-   double fahrenheit = ((celsius * 9) / 5) + 32;
+   double fahrenheit = ((celsius * 9.0) / 5.0) + 32.0;
    return fahrenheit; //Returns the fahrenheit number
 }
 
