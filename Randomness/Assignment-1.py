@@ -32,7 +32,7 @@ def most_probable(d, a, b) : #Function that takes the number of die to roll and 
         if (probability_b >= lca and probability_b <= uca) : #If the probability of b falls within a's confidence interval then we know they are equally likley
             return 1 #if yes return 1 
         else: 
-            return 0 #Otherwiuse return 0
+            return 0 #Otherwise return 0
 
     if (confidence_interval(count_a, count_b, lim) == 1) : #If the function returns 1 then we know they are equally likely 
         print("The number of %d's rolled is %d and the number of %d's rolled is %d" % (a, count_a, b, count_b))
