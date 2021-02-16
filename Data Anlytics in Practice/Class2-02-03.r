@@ -1,10 +1,3 @@
-x <- 7
-y <- 2
-z <- FALSE
-if ( (x > y) & (!z) ) {
-    y <- x
-} else {
-    x <- y
-}
-
-print(x) ##Test
+a = TRUE
+b = FALSE
+print(xor(xor(xor(a,b), a),b))
