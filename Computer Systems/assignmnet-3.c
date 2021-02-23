@@ -1,7 +1,7 @@
 /*
  * Program to build and represent a linked list of integers.
  *
- * Author: Amittai Aviram - aviram@bc.edu
+ * Author: Declan McGranahan - aviram@bc.edu
  */
 
 #include <ctype.h>
@@ -87,7 +87,11 @@ void insert_element(List * list, int value, int index) {
     }
     ++list->length;
 }
-
+/*
+ * Function that takes a list as an input and the location of some element in the list.
+ * It them traverses the list until it hits that index. Once that index is hit it removes the element.
+ * In the processes the location is stored in a temp node called temp.
+ */
 void remove_element(List * list, int index) {
     int i = 0;
     // Store head node
