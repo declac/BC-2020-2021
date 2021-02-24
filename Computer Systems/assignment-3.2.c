@@ -68,19 +68,20 @@ void add_element(List * list, int value) {
  */
 void insert_element(List * list, int value, int index) {
     // If the index is nonsensical, just ignore it.
-    int i;
     if (index < 0) {
         return;
     }
-    Node * new_node = make_node(value);
     if (index >= list->length) {
         add_element(list, value);
-    } else if (index == 0) {
+        return;
+    }
+    Node * new_node = make_node(value);
+    if (index == 0) {
         new_node->next = list->head;
         list->head = new_node;
     } else {
         Node * current = list->head;
-        for (i = 0; i < index - 1; ++i) {
+        for (int i = 0; i < index - 1; ++i) {
             current = current->next;
         }
         Node * rest = current->next;
@@ -89,6 +90,7 @@ void insert_element(List * list, int value, int index) {
     }
     ++list->length;
 }
+
 /*
  * Function that takes a list as an input and the location of some element in the list.
  * It them traverses the list until it hits that index. Once that index is hit it removes the element.
