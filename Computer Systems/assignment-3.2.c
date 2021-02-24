@@ -11,7 +11,6 @@
 #define USAGE "Please enter one of the following commands:\n" \
     "\ta <int> -- add <int> to the end of the list\n" \
     "\ti <int> <index> -- insert <int> at position <index>\n" \
-    "\ti <int> <index> -- insert <int> at position <index>\n" \
     "\tr <index> -- remove element from position <index>\n" \
     "\tq -- quit.\n"
 
