@@ -114,7 +114,7 @@ void remove_element(List * list, int index) {
         i++;
     }
     // If key was not present in linked list
-    if (temp == NULL)
+    if (temp == NULL || index < 0)
         return;
     // Unlink the node from linked list
     prev->next = temp->next;
