@@ -30,7 +30,7 @@ print(A[1,2])
 
 #Question 9
 vec10 = c(2, 4, 8, 16, 12, -10)
-append(vec10,10)
+vec10 = append(vec10,10)
 mean(vec10)
 
 #Question 10
