@@ -3,5 +3,6 @@
         "*.rmd": "markdown",
         "stdio.h": "c",
         "__locale": "c"
-    }
+    },
+    "python.pythonPath": "/usr/local/bin/python3"
 }
