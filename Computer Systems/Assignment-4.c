@@ -62,7 +62,6 @@ void print_exponent(unsigned int input) {
     printf("\nExponent:\n");
     mask = 1 << shift;
     printf("\tBinary: ");
-    unsigned int result;
     while(mask) {
         putchar(((exponent & mask) >> shift) + '0');
         mask >>= 1;
@@ -85,7 +84,7 @@ void print_exponent(unsigned int input) {
 void print_mantissa(unsigned int input) {
     printf("\nMantissa:\n");
     printf("\tBinary (With Added 1): ");
-    unsigned shift = 22;
+    unsigned int shift = 22;
     unsigned int mask = 0x7fffff;
     unsigned int mantissa = input & mask;
     mask = 1 << shift;
