@@ -10,9 +10,9 @@
  * Initializes the matrix by assignming a random number from 0-10
  */ 
 void init(int n, int *matrix) {
-    for (int i = 0; i < n; ++i) {
+    for (int i = 0; i <n; ++i) {
         for (int j = 0; j < n; ++j) {
-            *(matrix + i * n + j) = rand() % 10;
+            *(matrix + i*n + j) = rand() % 10;
         }
     }
 }
@@ -21,13 +21,13 @@ void init(int n, int *matrix) {
  * Number of columns/rows, two matrices to multiply and one to store the result
  * Loops through the columns and rows of each matrix and multiplies
  */
-void mult_standard(int n, int *mone, int *mtwo, int *result) {
+void multMat(int n, int *mone, int *mtwo, int *result) {
     int i,j,k;
     for (i = 0; i < n; ++i) {
         for (j = 0; j < n; ++j) {
-            result[i + j * n] = 0;
+            result[i+j*n] = 0;
             for (k = 0; k < n; ++k) {
-                result[n * i + j] += mone[n * i + k] * mtwo[n * k + j];
+                result[i+j*n] += mone[i+k*n]*mtwo[k+j*n];
             }
         }
     }
@@ -38,12 +38,18 @@ void mult_standard(int n, int *mone, int *mtwo, int *result) {
  * and one to set the block size of the transposition
  * Loops through the columns and rows of each matrix and switched columns and rows
  */
-void transpose(int n, int *dst, int *src)
-{
-    int i, j;
-    for (i = 0; i < n; i++)
-        for (j = 0; j < n; j++)
-            dst[n * i + j] = src[n * j + i];
+void transpose( int n, int blocksize, int *dst, int *src ) {
+    int i,j;
+    int k,m;
+    for ( i = 0; i < n; i += blocksize ) {
+	    for ( j = 0; j < n; j += blocksize ) {
+	        for ( k = i; (k < i + blocksize) & (k < n) ; k++ ) {
+		        for ( m = j; (m < j + blocksize) & (m < n); m++ ) {
+		            dst[m+k*n] = src[k+m*n];
+		        }
+	        }
+	    }
+    }
 }
 /*
  * Function that takes in 4 arguments
@@ -51,13 +57,14 @@ void transpose(int n, int *dst, int *src)
  * Transposes one of the matrices and then
  * Loops through the columns and rows of each matrix and multiplies
  */
-void mult_transpose(int n, int *mone, int *mtwo, int *result) {
+void multTrans(int n, int *mone, int *mtwo, int *result) {
     int i,j,k;
-    for (i = 0; i < n; ++i) {
-	    for (j = 0; j < n; ++j) {
-            result[i + j * n] = 0;
-	        for (k = 0; k < n; ++k) {
-		        result[n * i + j] += mone[n * i + k] * mtwo[n * j + k];
+    for( i = 0; i < n; ++i) {
+	    for( j = 0; j < n; ++j) {
+            result[i+j*n] = 0;
+	        for( k = 0; k < n; ++k) {
+		        result[i+j*n] += mone[k+i*n]*mtwo[j+k*n]; {
+                }
             }
         }
     }
@@ -69,7 +76,7 @@ void mult_transpose(int n, int *mone, int *mtwo, int *result) {
 void print(int n, int *matrix) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            printf("%d", matrix[n * i + j ]);
+            printf("%d", matrix[i+j*n]);
         }
         putchar('\n');
     }
@@ -80,15 +87,13 @@ void print(int n, int *matrix) {
  */ 
 void verify(int n, int *transpose, int *original) {
     /* check correctness */
-    for (int i = 0; i < n; i++ ) {
-        for (int j = 0; j < n; j++ ) {
-            if (transpose[n * j + i ] != original[n * j + i] ) {
+    for(int i = 0; i < n; i++ )
+        for(int j = 0; j < n; j++ )
+            if( transpose[j+i*n] != original[j+i*n] ) {
 	            printf("Error!!!! at %d, %d Transpose Multiplication does not result in correct answer!!\n", i, j);
-	            exit(-1);
+	            exit( -1 );
             }
-        }
-    }
-    printf("Transpose Multiplication and Normal Multiplication are the same");
+    printf("Transpose Multiplication and Normal are the same");
 }  
 /* 
  * Function takes one arguments, the number of rows/columns
@@ -97,15 +102,15 @@ void verify(int n, int *transpose, int *original) {
 void run(int n) {
     printf("Size of Matrix: %d: \n", n);
         clock_t t; //Initializes the clock to track time used on processes
-        clock_t t2; //Initializes the clock to track time used on processes
-        clock_t t3; //Initializes the clock to track time used on processes
 
-        //Initializes the matrices and sets there sizes
-        int *mone = (int *)malloc(n * n * sizeof(int));
-        int *mtwo = (int *)malloc(n * n * sizeof(int));
-        int *result_std = (int *)malloc(n * n * sizeof(int));
-        int *transposed = (int *)malloc(n * n * sizeof(int));
-        int *result_trans = (int *)malloc(n * n * sizeof(int));
+        //Initializes the matircies and sets there sizes
+        int *mone = (int *)malloc(n*n * sizeof(int));
+        int *mtwo = (int *)malloc(n*n * sizeof(int));
+        int *result_std = (int *)malloc(n*n * sizeof(int));
+        int *transposed = (int *)malloc(n*n * sizeof(int));
+        int *result_trans = (int *)malloc(n*n * sizeof(int));
+        int *result_trans2 = (int *)malloc(n*n * sizeof(int));
+        int *transposed2 = (int *)malloc(n*n * sizeof(int));
 
         //Fills the two inital matrices with random numbers
         init(n, mone);
@@ -114,25 +119,31 @@ void run(int n) {
         //Starts theclock
         t = clock();
         //Runs the matrix multiplication
-        mult_standard(n, mone, mtwo, result_std);
+        multMat(n, mone, mtwo, result_std);
         t = clock() - t; //End the clock
         double time_taken = ((double)t)/CLOCKS_PER_SEC; //Calculates Time from start to end
-        printf("mult_standard() took %f seconds to execute \n", time_taken); //Prints time
+        printf("Mult_Standard() took %f seconds to execute \n", time_taken); //Prints time
 
-        t2 = clock();
-        transpose(n, transposed, mtwo); //Creates the transpose of the second matrix
-        t2 = clock() - t2; //End the clock
-        double time_taken2 = ((double)t2)/CLOCKS_PER_SEC; //Calculates Time from start to end
-        printf("transpose() took %f seconds to execute \n", time_taken2); //Prints time
-
-        t3 = clock(); //Starts theclock
+        int blocksize = 30;
+        transpose(n, blocksize, transposed, mone);
+        transpose(n, blocksize, transposed2, mtwo);
+        t = clock(); //Starts theclock
          //Runs the matrix multiplication with transpotation
-        mult_transpose(n, mone, transposed, result_trans);
-        t3 = clock() - t3; //End the clock
-        double time_taken3 = ((double)t3)/CLOCKS_PER_SEC; //Calculates Time from start to end
-        printf("mult_transpose() took %f seconds to execute \n", time_taken3); //Prints time
-
-        verify(n, result_trans, result_std); // Verifies the multiplication is correct
+        multTrans(n, transposed, transposed2, result_trans);
+        t = clock() - t; //End the clock
+        time_taken = ((double)t)/CLOCKS_PER_SEC; //Calculates Time from start to end
+        printf("Mult_Transpose() took %f seconds to execute \n", time_taken); //Prints time
+        transpose(n, blocksize, result_trans2, result_trans);
+        
+        
+        print(n, result_std);
+        putchar('\n');
+        print(n, result_trans);
+        putchar('\n');
+        print(n, result_trans2);
+        putchar('\n');
+        
+        verify(n, result_trans2, result_std); // Verifies the multiplication is correct
         //Frees the memory of the matrices
         free(mone);
         free(mtwo);
@@ -148,7 +159,8 @@ int main(void) {
     //Loops through all of the different iterations
     for (int k = 0; k < 9; ++k) {
         run(nmax);
-        nmax = nmax * 2; //Powers the columns/rows by 2
+        nmax = nmax << 2; //Powers the columns/rows by 2
     }
+
     return 0;
 }
