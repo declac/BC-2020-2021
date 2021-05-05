@@ -2,7 +2,8 @@
     "files.associations": {
         "*.rmd": "markdown",
         "stdio.h": "c",
-        "__locale": "c"
+        "__locale": "c",
+        "point.h": "c"
     },
     "python.pythonPath": "/usr/local/bin/python3"
 }
